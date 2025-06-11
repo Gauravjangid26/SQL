@@ -1,25 +1,39 @@
--- TCL(commit,rollback,savepoint) :- if you run any DML,DDL,DCL command
--- DML task/start transaction ==> transaction start
--- DDL/DCL?commit rollback ==> transaction end
-set @@autocommit=0; -- it will help me to manage transaction personally not by sql
+-- transaction control lamguage -->set of logical query on database if this crud operation permanently save then iot is called tcl
+-- crud --> database transaction---> save/discard-->tcl
+
+-- all transaction is saved in database
 select @@autocommit;
+set @@autocommit=0;
+select @@autocommit;
+
 use regex;
-create table tushar(eid int);
-insert into tushar values(10);
-select * from tushar;
-insert into tushar values(20);
-select * from tushar;
-commit;
+create table abc11(id int);
+insert into abc11 values(1);
+select * from abc11;
+commit;-- save into my database
 
-insert into tushar values(30);
-create table tushar1(id int);
+-- transaction start:DML,start transaction 
+-- end: commit,rollback,DDL,DCL
+
+insert into abc11 values(12);
+select * from abc11;
+update abc11 set id=1;
+
 rollback;
-select * from tushar;
+select * from abc11;
 
-insert into tushar values(40);
-savepoint tushar_insert;
-create table tushar1(id int);
-delete from tushar where eid=10;
-select * from tushar;
-rollback to tushar_insert;
-select * from tushar;
+-- save points
+insert into abc11 values(12);
+insert into abc11 values(13);
+savepoint test_check_point;
+insert into abc11 values(14);
+
+rollback to test_check_point;
+
+select * from abc11;
+
+--
+start transaction;
+update abc11 set id=1;
+rollback;
+select * from abc11;
